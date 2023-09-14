@@ -1,0 +1,20 @@
+{
+  "name": "kg_utils",
+  "version": "1.0.0",
+  "description": "常用工具包",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "kg": "./cli.js"
+  },
+  "author": "liangxinghu",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^11.0.0",
+    "fontmin": "^1.0.1",
+    "gulp-rename": "^2.0.0"
+  }
+}
