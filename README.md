@@ -1,6 +1,7 @@
 ### 1. 生成模板文件
 - [ ] 项目生成功能
 - [ ] page、project公共模板
+- [ ] 删除参数type，考虑项目模板直接从gitlab上拉取（待定）
   
 `kg g <type> <TemplateName> <TargetName> [options...] -s src/pages --default`
 | 参数 |  | 描述 |
@@ -31,3 +32,8 @@ type===project时，同上。
 生成在TargetFilePath同级目录下，新文件前缀为subset-xxx.ttf
 
 实现思路：基于fontmin库
+
+### 3. 压缩图片文件夹
+- [ ] 待实现
+`kg imagemin <TargetFilePath>`
+实现思路：基于imagemin库
