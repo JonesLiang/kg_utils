@@ -15,47 +15,27 @@ const getDefaultSrc = (type) => {
 };
 program.version("1.0.0", "-v,--version", "工具包版本号");
 program
-  .command("g <type> <sourceName> <targetName> [options...]")
-  .option("-s|--src <src>", "生成的位置,默认src/pages")
+  .command("g <sourceName> <targetName> [options...]")
+  .option("-s|--src <src>", "生成的位置,默认src/pages", "src/pages")
   .option("--default", "是否使用默认模板")
   .allowUnknownOption()
-  .action(
-    (type, sourceName, targetName, UnexpectedOptions, ExpectedOptions) => {
-      // UnexpectedOptions ---->[options...]
-      // ExpectedOptions -----> .option()
-      // console.log("type:", type);
-      // console.log("sourceName:", sourceName);
-      // console.log("targetName:", targetName);
-      // console.log("UnexpectedOptions:", UnexpectedOptions);
-      // console.log("ExpectedOptions:", ExpectedOptions);
-      // console.log("parseUnexpectedOptions:", parseOption(UnexpectedOptions));
-      // 不指定src是根据type判断src默认值
-      if (!ExpectedOptions.src) {
-        ExpectedOptions.src = getDefaultSrc(type);
-      }
-      switch (type) {
-        case "page":
-          generatePageHandler(
-            sourceName,
-            targetName,
-            UnexpectedOptions,
-            ExpectedOptions
-          );
-          break;
-        case "project":
-          // generateProjectHandler(
-          //   sourceName,
-          //   targetName,
-          //   UnexpectedOptions,
-          //   ExpectedOptions
-          // );
-          // TODO:待完成 项目生成
-          break;
-        default:
-          break;
-      }
-    }
-  );
+  .action((sourceName, targetName, UnexpectedOptions, ExpectedOptions) => {
+    // UnexpectedOptions ---->[options...]
+    // ExpectedOptions -----> .option()
+    // console.log("type:", type);
+    // console.log("sourceName:", sourceName);
+    // console.log("targetName:", targetName);
+    // console.log("UnexpectedOptions:", UnexpectedOptions);
+    // console.log("ExpectedOptions:", ExpectedOptions);
+    // console.log("parseUnexpectedOptions:", parseOption(UnexpectedOptions));
+    // 不指定src是根据type判断src默认值
+    generatePageHandler(
+      sourceName,
+      targetName,
+      UnexpectedOptions,
+      ExpectedOptions
+    );
+  });
 program
   .command("fontcut <TargetFilePath>")
   .description("根据指定文字裁剪字体库")
@@ -65,4 +45,9 @@ program
   )
   .option("-c|--config", "使用该option时，会读取根目录下的fontcut.txt文件")
   .action(FontcutHandler);
+
+program
+  .command("swagger")
+  .description("将swagger接口文档转换成typescript service")
+  .action(() => {});
 program.parse();

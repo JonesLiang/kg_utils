@@ -66,21 +66,21 @@ export function generatePageHandler(
   const __filename = fileURLToPath(import.meta.url);
   // 获取当前模块所在的目录路径
   const __dirname = path.dirname(path.dirname(__filename));
-  // 解析未预期的options
+  // 解析未预期的optionsd
   const parsedUnexpectedOptions = Object.assign(
     parseOption(UnexpectedOptions) || {},
     { name: targetName.split(".")[0] }
   );
-  // 模板地址，--default===>./.templates/page ，否则：用户本地.templates/page
+  // 模板地址，--default===>./.templates ，否则：用户本地.templates
   const templatesPath = ExpectedOptions.default
-    ? path.join(__dirname, ".templates/page")
-    : path.join(".templates/page");
+    ? path.join(__dirname, ".templates")
+    : path.join(".templates");
   // 获取模板page文件夹下所有的指令
   const pageTempNames = GetAllFolderAndFileNameFromTargetFolder(templatesPath);
   // 判断指令是否存在
   if (!pageTempNames.includes(sourceName)) {
     console.log(
-      ".templates/page文件夹下不存在模板文件：",
+      ".templates文件夹下不存在模板文件：",
       sourceName,
       pageTempNames
     );
