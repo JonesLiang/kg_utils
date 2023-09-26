@@ -9,18 +9,14 @@ const routeDocs = includeFile("@base/route-docs", { config, route, utils });
 const queryName = (query && query.name) || "query";
 const pathParams = _.values(parameters);
 const pathParamsNames = _.map(pathParams, "name");
-
 const isFetchTemplate = config.httpClientType === HTTP_CLIENT.FETCH;
-
 const requestConfigParam = {
-    name: specificArgNameResolver.resolve(RESERVED_REQ_PARAMS_ARG_NAMES),
+    name: "options",
     optional: true,
-    type: "RequestParams",
+    type: "RequestConfig",
     defaultValue: "{}",
 }
-
 const argToTmpl = ({ name, optional, type, defaultValue }) => `${name}${!defaultValue && optional ? '?' : ''}: ${type}${defaultValue ? ` = ${defaultValue}` : ''}`;
-
 const rawWrapperArgs = config.extractRequestParams ?
     _.compact([
         requestParams && {
@@ -38,8 +34,7 @@ const rawWrapperArgs = config.extractRequestParams ?
         payload,
         requestConfigParam,
     ])
-
-const wrapperArgs = _
+    const wrapperArgs = _
     // Sort by optionality
     .sortBy(rawWrapperArgs, [o => o.optional])
     .map(argToTmpl)
@@ -47,10 +42,10 @@ const wrapperArgs = _
 
 // RequestParams["type"]
 const requestContentKind = {
-    "JSON": "ContentType.Json",
-    "URL_ENCODED": "ContentType.UrlEncoded",
-    "FORM_DATA": "ContentType.FormData",
-    "TEXT": "ContentType.Text",
+    "JSON": '"application/json"',
+    "URL_ENCODED": '"application/x-www-form-urlencoded"',
+    "FORM_DATA": '"multipart/form-data"',
+    "TEXT": '"text/plain"',
 }
 // RequestParams["format"]
 const responseContentKind = {
@@ -58,27 +53,13 @@ const responseContentKind = {
     "IMAGE": '"blob"',
     "FORM_DATA": isFetchTemplate ? '"formData"' : '"document"'
 }
-
 const bodyTmpl = _.get(payload, "name") || null;
 const queryTmpl = (query != null && queryName) || null;
 const bodyContentKindTmpl = requestContentKind[requestBodyInfo.contentKind] || null;
 const responseFormatTmpl = responseContentKind[responseBodyInfo.success && responseBodyInfo.success.schema && responseBodyInfo.success.schema.contentKind] || null;
 const securityTmpl = security ? 'true' : null;
-
-const describeReturnType = () => {
-    if (!config.toJS) return "";
-
-    switch(config.httpClientType) {
-        case HTTP_CLIENT.AXIOS: {
-          return `Promise<AxiosResponse<${type}>>`
-        }
-        default: {
-          return `Promise<HttpResponse<${type}, ${errorType}>`
-        }
-    }
-}
-
 %>
+
 /**
 <%~ routeDocs.description %>
 
@@ -87,12 +68,11 @@ const describeReturnType = () => {
 <%~ routeDocs.lines %>
 
  */
-<%~ route.routeName.usage %> = (<%~ wrapperArgs %>)<%~ config.toJS ? `: ${describeReturnType()}` : "" %> =>
-    <%~ config.singleHttpClient ? 'this.http.request' : 'this.request' %><<%~ type %>, <%~ errorType %>>({
-        path: `<%~ path %>`,
+static <%~ route.routeName.usage %> = (<%~ wrapperArgs %>) =>
+    request<<%~ type %>>(`<%~ path %>`,{
         method: '<%~ _.upperCase(method) %>',
-        <%~ queryTmpl ? `query: ${queryTmpl},` : '' %>
-        <%~ bodyTmpl ? `body: ${bodyTmpl},` : '' %>
+        <%~ queryTmpl ? `params: ${queryTmpl},` : '' %>
+        <%~ bodyTmpl ? `data: ${bodyTmpl},` : '' %>
         <%~ securityTmpl ? `secure: ${securityTmpl},` : '' %>
         <%~ bodyContentKindTmpl ? `type: ${bodyContentKindTmpl},` : '' %>
         <%~ responseFormatTmpl ? `format: ${responseFormatTmpl},` : '' %>

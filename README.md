@@ -31,7 +31,16 @@
 
 
 ### 4. swagger接口文档生成typescript service
-- [ ] 待实现
+- [ ] 待优化
+  `kg swagger -u http://192.168.3.129:10111/auth-server/v2/api-docs --proxy /api --output ./src/services --reserve false --templatePath .swaggerTemplate`
+  | 参数 |  | 描述 |
+| ---- | ---- | ----|
+| -u/--url | 必填 |  swagger地址 |
+| -p/--proxy | 可选 | proxy前缀,默认/api |
+| -o/--output | 可选 | 输出文件地址，默认.src/services |
+| -r/--reserve | 可选 | 当使用默认模板时，会在包的根目录下自动生成一个模板，该选项表示是否移除自动生成的模板，默认值为false |
+| -t/--template | 可选 | 用户本地模板文件地址，可通过kg swagger-template指令来生成模板文件，默认放在.swaggerTemplate文件夹中 |
+swagger template 使用eta语法：https://eta.js.org/docs/
 
 ### 5. rap2接口文档生成typescript service
 - [ ] 待实现

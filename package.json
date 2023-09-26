@@ -1,6 +1,6 @@
 {
   "name": "kg_utils",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "常用工具包",
   "main": "index.js",
   "type": "module",
@@ -15,6 +15,7 @@
   "dependencies": {
     "commander": "^11.0.0",
     "fontmin": "^1.0.1",
+    "fs-extra": "^11.1.1",
     "gulp-rename": "^2.0.0",
     "swagger-typescript-api": "^13.0.3"
   }

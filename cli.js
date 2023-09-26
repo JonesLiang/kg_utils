@@ -2,17 +2,7 @@
 import { program } from "commander";
 import { generatePageHandler } from "./src/GeneratePage.js";
 import { FontcutHandler } from "./src/Fontcut.js";
-const getDefaultSrc = (type) => {
-  console.log("--->", type);
-  switch (type) {
-    case "page":
-      return "src/pages";
-    case "project":
-      return "";
-    default:
-      return "";
-  }
-};
+import { swaggerTsApi, getSwaggerTemplate } from "./src/SwaggerToTypescript.js";
 program.version("1.0.0", "-v,--version", "工具包版本号");
 program
   .command("g <sourceName> <targetName> [options...]")
@@ -47,7 +37,20 @@ program
   .action(FontcutHandler);
 
 program
+  .description("通过 swagger-typescript-api 生成 api")
   .command("swagger")
-  .description("将swagger接口文档转换成typescript service")
-  .action(() => {});
+  .requiredOption("-u, --url <http>", "获取 swagger.json 的 url")
+  .option("-p, --proxy <string>", "proxy 前缀", "/api")
+  .option("-o, --output <string>", "api 生成路径", "./src/services")
+  .option("-r, --reserve <boolean>", "swagger 自动生成的模板是否保留", false)
+  .option("-t, --templatePath  <string>", "使用指定的 swagger 模板路径")
+  .action(({ url, proxy, output, reserve, templatePath }) => {
+    swaggerTsApi({ url, proxy, output, reserve, templatePath });
+  });
+program
+  .description("获取当前swagger template")
+  .command("swagger-template")
+  .action(() => {
+    getSwaggerTemplate();
+  });
 program.parse();
